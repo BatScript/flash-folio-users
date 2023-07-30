@@ -1,6 +1,8 @@
+import { useRouter } from 'next/router'
 import styles from './contentSection.module.scss'
 
 const ContentSection = () => {
+  const router = useRouter()
   return (
     <div className={styles.container}>
       <h1>
@@ -10,7 +12,7 @@ const ContentSection = () => {
         <br />
         No Coding Required.
       </h1>
-      <button>Get Started Now!</button>
+      <button onClick={() => router.push('/create')}>Get Started Now!</button>
     </div>
   )
 }
