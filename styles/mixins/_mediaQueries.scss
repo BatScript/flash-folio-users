@@ -1,0 +1,33 @@
+// variables
+$phoneWidth: 599px;
+$tabletPortraitWidth: 600px;
+$tabletLandscapeWidth: 900px;
+$desktopWidth: 1200px;
+$desktopLargeWidth: 1500px;
+
+@mixin mobile {
+  @media (max-width: #{$phoneWidth}) {
+    @content;
+  }
+}
+@mixin tablet-portrait {
+  @media (min-width:#{$tabletPortraitWidth}) {
+    @content;
+  }
+}
+@mixin tablet-landscape {
+  @media (max-width:#{$tabletLandscapeWidth}) {
+    @content;
+  }
+}
+@mixin desktop {
+  @media (min-width:#{$desktopWidth}) {
+    @content;
+  }
+}
+
+@mixin big-desktop {
+  @media (min-width:#{$desktopLargeWidth}) {
+    @content;
+  }
+}

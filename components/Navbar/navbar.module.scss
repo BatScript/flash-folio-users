@@ -1,0 +1,20 @@
+@import '../../styles/mixins/mediaQueries';
+.navbarDesktop {
+  @include mobile {
+    display: none;
+  }
+
+  @include tablet-portrait {
+    display: none;
+  }
+
+  @include desktop {
+    display: block;
+  }
+}
+
+.navbarMobile {
+  @include desktop {
+    display: none;
+  }
+}
