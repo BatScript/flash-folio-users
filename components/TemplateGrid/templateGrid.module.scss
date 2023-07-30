@@ -1,6 +1,10 @@
+@import '../../styles/mixins/mediaQueries';
 .grid {
   display: grid;
   margin: 50px 100px;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   justify-items: center;
+  @include mobile {
+    margin: 50px auto;
+  }
 }

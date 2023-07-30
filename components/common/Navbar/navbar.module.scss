@@ -1,4 +1,4 @@
-@import '../../styles/mixins/mediaQueries';
+@import '../../../styles/mixins/mediaQueries';
 .navbarDesktop {
   @include mobile {
     display: none;
