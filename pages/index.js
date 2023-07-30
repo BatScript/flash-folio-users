@@ -1,5 +1,6 @@
 import ContentSection from '@/components/ContentSection'
 import Navbar from '@/components/Navbar'
+import FlashFolioMeta from '@/components/Seo/Meta'
 import { Outfit } from 'next/font/google'
 
 const outfit = Outfit({
@@ -11,6 +12,14 @@ const outfit = Outfit({
 export default function Home() {
   return (
     <div className={`min-h-screen ${outfit.className}`}>
+      <FlashFolioMeta
+        title={`Flashfolio`}
+        siteName={'flashfolio'}
+        type={'website'}
+        canonical={'https"//portfolio.flashweb.in'}
+        keywords={`portfolio, website builder, portfolio maker`}
+        description={`Build your trendy and personalised portfolio website in few steps, without coding!`}
+      />
       <Navbar />
       <ContentSection />
     </div>

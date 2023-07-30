@@ -4,8 +4,11 @@ const ContentSection = () => {
   return (
     <div className={styles.container}>
       <h1>
-        Instant Portfolio Websites: Effortless, Personalized, and Stunning!
-        Create Your Dream Portfolio with Ease. No Coding Required.
+        <strong>Instant Portfolio Websites:</strong>
+        <br /> Effortless, Personalized, and Stunning! Create Your Dream
+        Portfolio with Ease.
+        <br />
+        No Coding Required.
       </h1>
       <button>Get Started Now!</button>
     </div>
