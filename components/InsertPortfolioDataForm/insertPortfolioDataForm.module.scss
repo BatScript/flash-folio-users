@@ -1,6 +1,10 @@
+@import '../../styles/mixins/mediaQueries';
 .formContainer {
-  max-height: 400px;
+  max-height: 75vh;
   overflow-y: scroll;
+  @include mobile {
+    max-height: 80vh;
+  }
   .form {
     color: #f9ffff !important;
     width: 100%;
