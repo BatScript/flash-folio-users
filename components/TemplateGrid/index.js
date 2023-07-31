@@ -7,14 +7,25 @@ import Button from '../common/Button'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import NavigationButtons from '../common/NavigationButtons'
+import dynamic from 'next/dynamic'
+
+// dynamic imports
+const InsertPortfolioDataForm = dynamic(
+  () => import('../InsertPortfolioDataForm'),
+  {
+    ssr: false
+  }
+)
 
 const TemplateGrid = () => {
   // Initialisations 👇
   const router = useRouter()
   const [step, setStep] = useState(1)
+  const [selectedTemplate, setSelectedComponent] = useState(null)
   // ----------------
   // Functions 👇
-  const templateSelectTrigger = () => {
+  const templateSelectTrigger = (cardIndex) => {
+    setSelectedComponent(cardIndex)
     setStep(2)
   }
 
@@ -25,7 +36,7 @@ const TemplateGrid = () => {
   }
 
   const handleNextStep = () => {
-    if (step < 3) {
+    if (step < 3 && selectedTemplate) {
       setStep(step + 1)
     }
   }
@@ -33,7 +44,7 @@ const TemplateGrid = () => {
   // Sub Components 👇
   const CardGrid = ({ cardContent, cardIndex }) => {
     return (
-      <Card hasPadding={true} isRounded={true} hasBorder={true} maxWidth={300}>
+      <Card hasPadding={true} hasBorder={true} maxWidth={300}>
         <div>
           <Image src={cardContent?.image} width={300} height={120} />
         </div>
@@ -41,15 +52,20 @@ const TemplateGrid = () => {
           <strong>{cardContent?.name}</strong>
         </p>
         <p dangerouslySetInnerHTML={{ __html: cardContent?.description }} />
-        <div className="mt-1 flex justify-between">
+        <div className="mt-1 flex justify-between gap-2">
           <Button
-            type="bordered"
+            className="w-full"
+            type="hoverAnimation"
             onClick={() => router.push(cardContent?.previewUrl)}
           >
             <span>Preview</span>&nbsp;
             <CaretRightFill />
           </Button>
-          <Button type="bordered" onClick={templateSelectTrigger}>
+          <Button
+            className="w-full"
+            type="hoverAnimation"
+            onClick={() => templateSelectTrigger(cardIndex)}
+          >
             <span>Use</span>&nbsp;
             <PlusCircleFill />
           </Button>
@@ -68,7 +84,11 @@ const TemplateGrid = () => {
           </div>
         )
       case 2:
-        return <p>so ja bhadve</p>
+        return (
+          <div>
+            <InsertPortfolioDataForm />
+          </div>
+        )
     }
   }
   // ----------------
@@ -76,6 +96,8 @@ const TemplateGrid = () => {
   return (
     <div className="container mx-auto">
       <NavigationButtons
+        showPrevious={true}
+        showNext={true}
         currentContentIndex={step}
         finalIndex={2}
         handleNext={() => handleNextStep()}

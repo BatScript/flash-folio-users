@@ -1,0 +1,9 @@
+.bordered {
+  border: 1px solid #f9ffff;
+  background: transparent;
+  color: #f9ffff;
+  padding: 7px;
+  &::before {
+    color: #b7b7b7 !important;
+  }
+}

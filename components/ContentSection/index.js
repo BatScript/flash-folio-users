@@ -8,7 +8,11 @@ const ContentSection = () => {
   return (
     <div className={styles.container}>
       <h1 dangerouslySetInnerHTML={{ __html: homePageContent?.heroText }} />
-      <Button onClick={() => router.push('/create')}>
+      <Button
+        type="hoverAnimation"
+        className="mt-2 mx-auto"
+        onClick={() => router.push('/create')}
+      >
         {homePageContent?.ctaText}
       </Button>
     </div>

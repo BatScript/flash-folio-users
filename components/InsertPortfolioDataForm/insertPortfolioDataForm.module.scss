@@ -1,0 +1,40 @@
+.formContainer {
+  max-height: 400px;
+  overflow-y: scroll;
+  .form {
+    color: #f9ffff !important;
+    width: 100%;
+    .formRow {
+      position: relative;
+      padding: 10px;
+      &.borderTop {
+        border-top: 1px solid #f9ffff;
+      }
+      .submitButton {
+        width: 100%;
+        // position: fixed;
+        // bottom: 0;
+      }
+    }
+  }
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  /* Track */
+  &::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey;
+    border-radius: 10px;
+  }
+
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+    background: #f9ffff;
+    border-radius: 10px;
+  }
+
+  /* Handle on hover */
+  &::-webkit-scrollbar-thumb:hover {
+    background: #b7b7b7;
+  }
+}

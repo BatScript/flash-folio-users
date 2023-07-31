@@ -21,7 +21,7 @@ body {
     bottom: -4px;
     width: 100%;
     height: 2px;
-    background-color: white;
+    background-color: #f9ffff;
     transform: scaleX(0);
     transform-origin: right;
     transition: transform 0.75s ease-in-out;
@@ -32,4 +32,30 @@ body {
     transform-origin: left;
     transition: transform 0.25s ease-in-out;
   }
+}
+
+.ql-toolbar .ql-stroke {
+  fill: none !important;
+  stroke: #f9ffff !important;
+}
+
+.ql-toolbar .ql-fill {
+  fill: #f9ffff !important;
+  stroke: none !important;
+}
+
+.ql-toolbar .ql-picker {
+  color: #f9ffff !important;
+}
+
+.ql-picker-options {
+  background: transparent !important;
+}
+
+.ql-editor {
+  min-height: 200px;
+}
+
+.ql-editor.ql-blank::before {
+  color: #b7b7b7 !important;
 }

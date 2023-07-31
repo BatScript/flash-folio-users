@@ -1,8 +1,23 @@
 .borderedButton {
   padding: 7px 10px;
   border: 2px solid #f9ffff;
-  border-radius: 7px;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.hoverAnimatedButton {
+  padding: 7px 10px;
+  border: 2px solid #f9ffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(to right, #f9ffff 50%, #012c32 50%);
+  background-size: 200% 100%;
+  background-position: right bottom;
+  transition: all 0.5s ease-out;
+  &:hover {
+    background-position: left bottom;
+    color: #012c32;
+  }
 }
