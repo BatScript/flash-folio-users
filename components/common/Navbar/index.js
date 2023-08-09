@@ -10,25 +10,25 @@ const poppins = Poppins({
 
 const Navbar = () => {
   return (
-    <div className="flex justify-between p-2">
-      <p className={`${poppins.className} text-md tracking-wide`}>
+    <div className="tw-flex tw-justify-between tw-p-2">
+      <p className={`${poppins.className} tw-text-md tw-tracking-wide`}>
         <a href="/">
           <strong>FlashWeb</strong>
         </a>
       </p>
       <div className={styles.navbarDesktop}>
-        <ul className="flex gap-x-5">
-          <li className="cursor-pointer hover-link">
+        <ul className="tw-flex tw-gap-x-5">
+          <li className="tw-cursor-pointer tw-hover-link">
             <a href="/templates">Templates</a>
           </li>
-          <li className="cursor-pointer hover-link">
+          <li className="tw-cursor-pointer tw-hover-link">
             <a href="https://www.flashweb.in">Blogs</a>
           </li>
-          <li className="cursor-pointer">Login/SignUp</li>
+          <li className="tw-cursor-pointer">Login/SignUp</li>
         </ul>
       </div>
       <div className={`${styles.navbarMobile}`}>
-        <div className="cursor-pointer">
+        <div className="tw-cursor-pointer">
           <List size={25} />
         </div>
       </div>

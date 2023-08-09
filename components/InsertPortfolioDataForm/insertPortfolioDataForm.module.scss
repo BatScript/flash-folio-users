@@ -8,17 +8,11 @@
   .form {
     color: #f9ffff !important;
     width: 100%;
-    .formRow {
-      position: relative;
-      padding: 10px;
-      &.borderTop {
-        border-top: 1px solid #f9ffff;
-      }
-      .submitButton {
-        width: 100%;
-        // position: fixed;
-        // bottom: 0;
-      }
+    .submitButton {
+      background-color: #f9ffff;
+      color: #001c30;
+      font-weight: 600;
+      text-transform: uppercase;
     }
   }
   &::-webkit-scrollbar {

@@ -21,7 +21,7 @@ export default function Home() {
         keywords={`portfolio, website builder, portfolio maker`}
         description={`Build your trendy and personalised portfolio website in few steps, without coding!`}
       />
-      <ContentSection />
+      <ContentSection className={outfit.className} />
     </Layout>
   )
 }

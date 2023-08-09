@@ -5,8 +5,8 @@ const Card = ({ isRounded, children, hasPadding, hasBorder, maxWidth }) => {
     <div
       style={{ maxWidth: `${maxWidth}px` }}
       className={`${hasBorder ? styles.border : ''} ${
-        isRounded ? 'br-sm' : ''
-      } ${hasPadding ? 'p-2' : ''} shadow w-fit`}
+        isRounded ? 'tw-br-sm' : ''
+      } ${hasPadding ? 'tw-p-2' : ''} tw-shadow tw-w-fit`}
     >
       {children}
     </div>

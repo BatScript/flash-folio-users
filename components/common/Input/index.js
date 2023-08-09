@@ -1,6 +1,13 @@
 import styles from './input.module.scss'
 
-const Input = ({ type = 'bordered', className = '', placeHolder = '' }) => {
+const Input = ({
+  variant = 'bordered',
+  className = '',
+  placeHolder = '',
+  onChange,
+  value,
+  type
+}) => {
   // Initialisations 👇
   // ----------------
   // Functions 👇
@@ -8,12 +15,15 @@ const Input = ({ type = 'bordered', className = '', placeHolder = '' }) => {
   // Sub Components 👇
   // ----------------
   // Final Return Statement 👇
-  switch (type) {
+  switch (variant) {
     case 'bordered':
       return (
         <input
-          className={`${className} w-full ${styles.bordered}`}
+          type={type}
+          className={`${className} tw-w-full ${styles.bordered}`}
           placeholder={placeHolder}
+          value={value}
+          onChange={(e) => onChange(e)}
         />
       )
   }

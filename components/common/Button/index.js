@@ -3,7 +3,7 @@
 
 import styles from './button.module.scss'
 
-const Button = ({ text, type, children, onClick, isDisabled, className }) => {
+const Button = ({ text, type, children, isDisabled, className, onClick }) => {
   switch (type) {
     case 'bordered':
       return (

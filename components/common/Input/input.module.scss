@@ -6,4 +6,7 @@
   &::before {
     color: #b7b7b7 !important;
   }
+  &:focus {
+    outline: none;
+  }
 }

@@ -3,14 +3,14 @@ import styles from './contentSection.module.scss'
 import { homePageContent } from '@/constants'
 import Button from '../common/Button'
 
-const ContentSection = () => {
+const ContentSection = ({ className }) => {
   const router = useRouter()
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} ${className}`}>
       <h1 dangerouslySetInnerHTML={{ __html: homePageContent?.heroText }} />
       <Button
         type="hoverAnimation"
-        className="mt-2 mx-auto"
+        className="tw-mt-2 tw-mx-auto"
         onClick={() => router.push('/create')}
       >
         {homePageContent?.ctaText}

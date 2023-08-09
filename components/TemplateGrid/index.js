@@ -48,13 +48,13 @@ const TemplateGrid = () => {
         <div>
           <Image src={cardContent?.image} width={300} height={120} />
         </div>
-        <p className="mt-1">
+        <p className="tw-mt-1">
           <strong>{cardContent?.name}</strong>
         </p>
         <p dangerouslySetInnerHTML={{ __html: cardContent?.description }} />
-        <div className="mt-1 flex justify-between gap-2">
+        <div className="tw-mt-1 tw-flex tw-justify-between tw-gap-2">
           <Button
-            className="w-full"
+            className="tw-w-full"
             type="hoverAnimation"
             onClick={() => router.push(cardContent?.previewUrl)}
           >
@@ -62,7 +62,7 @@ const TemplateGrid = () => {
             <CaretRightFill />
           </Button>
           <Button
-            className="w-full"
+            className="tw-w-full"
             type="hoverAnimation"
             onClick={() => templateSelectTrigger(cardIndex)}
           >
@@ -94,7 +94,7 @@ const TemplateGrid = () => {
   // ----------------
   // Final Return Statement 👇
   return (
-    <div className="container mx-auto">
+    <div className="tw-container tw-mx-auto">
       <NavigationButtons
         showPrevious={true}
         showNext={true}
@@ -103,6 +103,10 @@ const TemplateGrid = () => {
         handleNext={() => handleNextStep()}
         handlePrevious={() => handlePreviousStep()}
       />
+      {/* <progress className={styles.progressBar} value="32" max="100">
+        32%
+      </progress> */}
+
       <CurrentStep />
     </div>
   )
