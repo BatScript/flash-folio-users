@@ -3,22 +3,24 @@
 
 import styles from './button.module.scss'
 
-const Button = ({ text, type, children, isDisabled, className, onClick }) => {
+const Button = ({ text, type, children, isDisabled, className, onClick, btnType='button' }) => {
   switch (type) {
     case 'bordered':
       return (
         <button
-          className={`${className} ${styles.borderedButton}`}
-          onClick={onClick}
-          disabled={isDisabled}
+        type={btnType}
+        className={`${className} ${styles.borderedButton}`}
+        onClick={onClick}
+        disabled={isDisabled}
         >
           {children}
           {text}
         </button>
       )
-    case 'hoverAnimation':
-      return (
-        <button
+      case 'hoverAnimation':
+        return (
+          <button
+          type={btnType}
           className={`${className} ${styles.hoverAnimatedButton}`}
           onClick={onClick}
           disabled={isDisabled}
@@ -30,6 +32,7 @@ const Button = ({ text, type, children, isDisabled, className, onClick }) => {
     default:
       return (
         <button
+          type={btnType}
           onClick={onClick}
           disabled={isDisabled}
           className={`${className}`}

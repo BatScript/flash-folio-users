@@ -1,12 +1,15 @@
-import styles from './input.module.scss'
+import styles from "./input.module.scss";
 
 const Input = ({
-  variant = 'bordered',
-  className = '',
-  placeHolder = '',
+  variant = "bordered",
+  className = "",
+  placeHolder = "",
   onChange,
   value,
-  type
+  type,
+  errorMessage="Incorrect Entry!",
+  required=false,
+  name=""
 }) => {
   // Initialisations 👇
   // ----------------
@@ -16,17 +19,33 @@ const Input = ({
   // ----------------
   // Final Return Statement 👇
   switch (variant) {
-    case 'bordered':
+    case "bordered":
       return (
         <input
+          required={required}
           type={type}
           className={`${className} tw-w-full ${styles.bordered}`}
           placeholder={placeHolder}
           value={value}
           onChange={(e) => onChange(e)}
+          name={name}
         />
-      )
+      );
+    case "error":
+      return (
+        <>
+          <input
+          name={name}
+            type={type}
+            className={`${className} tw-w-full ${styles.error}`}
+            placeholder={placeHolder}
+            value={value}
+            onChange={(e) => onChange(e)}
+          />
+          <p className={`${styles.errroHelper}`}>{errorMessage}</p>
+        </>
+      );
   }
   // ----------------
-}
-export default Input
+};
+export default Input;

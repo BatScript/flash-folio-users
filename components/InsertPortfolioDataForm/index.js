@@ -2,7 +2,7 @@ import 'react-quill/dist/quill.snow.css'
 import Button from '../common/Button'
 import styles from './insertPortfolioDataForm.module.scss'
 import Input from '../common/Input'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import NavItemInputs from './NavItemInputs'
 import { saveFormData } from '@/utilities/submitForm'
 
@@ -13,11 +13,35 @@ const InsertPortfolioDataForm = ({ prop }) => {
     listItems: [{ title: '', desc: '' }]
   })
 
+  const [errorData, setErrorData] = useState({
+    name: false,
+    profession: false,
+    listItems:[false]
+  })
+
+  const handleResetError = (name, index) => {
+    if(index !== undefined){
+      let newListItems = [...errorData.listItems];
+      newListItems[index] = false
+      setErrorData((prev)=> ({
+        ...prev,
+        [name]: newListItems
+      }))
+    }else{
+      setErrorData((prev)=> ({
+        ...prev,
+        [name]: false
+      }))
+    }
+  }
+
   const handleNameChange = (e) => {
+    console.log(e.target);
     setFormData((prevData) => ({
       ...prevData,
       name: e.target.value
     }))
+    handleResetError('name')
   }
 
   const handleAgeChange = (e) => {
@@ -25,6 +49,7 @@ const InsertPortfolioDataForm = ({ prop }) => {
       ...prevData,
       profession: e.target.value
     }))
+    handleResetError("profession")
   }
 
   const handleTitleChange = (index, e) => {
@@ -34,6 +59,7 @@ const InsertPortfolioDataForm = ({ prop }) => {
       ...prevData,
       listItems: newListItems
     }))
+    handleResetError('listItems', index)
   }
 
   const handleDescChange = (index, val) => {
@@ -50,6 +76,10 @@ const InsertPortfolioDataForm = ({ prop }) => {
       ...prevData,
       listItems: [...prevData.listItems, { title: '', desc: '' }]
     }))
+    setErrorData((prev) => ({
+      ...prev,
+      listItems: [...prev.listItems, false]
+    }))
   }
 
   const handleRemoveComponent = (index) => {
@@ -59,13 +89,55 @@ const InsertPortfolioDataForm = ({ prop }) => {
       ...prevData,
       listItems: newListItems
     }))
+
+    const newErrorListItems = [...errorData.listItems]
+    newErrorListItems.splice(index, 1)
+    setErrorData((prevData) => ({
+      ...prevData,
+      listItems: newErrorListItems
+    }))
+
   }
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    saveFormData(formData)
+    let hasError = false;
+    Object.keys(formData).forEach(function(key, index) {
+      if(!formData[key] && key !== "listItems"){
+        setErrorData((prev) => ({
+          ...prev,
+          [key]: `${key} is required!`
+        }))
+        hasError = true;
+      }else if(key === "listItems"){
+        formData?.listItems?.map((item, index) => {
+          if(item?.title === ""){
+            let newListItem = [...errorData.listItems];
+            newListItem[index] = `Title is required`
+            setErrorData((prev) => ({
+              ...prev,
+              listItems: newListItem
+            }))
+            hasError = true;
+          }
+        })
+      }
+
+    })
+
+
+    if(!hasError){
+      console.log("data submitting");
+      saveFormData(formData)
+    }
     // Handle form submission with formData
   }
+
+  useEffect(() => {
+    console.log("🚀 ~ file: index.js:99 ~ InsertPortfolioDataForm ~ errorData:", errorData)
+    
+  }, [errorData])
+  
 
   return (
     <div className={`tw-px-2 ${styles.formContainer}`}>
@@ -74,20 +146,24 @@ const InsertPortfolioDataForm = ({ prop }) => {
       </h1>
       <form className={styles.form} onSubmit={handleSubmit}>
         <Input
+          required
           className="tw-mt-2"
-          variant="bordered"
+          variant={Boolean(errorData?.name) ? "error" : "bordered"}
           type="text"
           value={formData.name}
           onChange={handleNameChange}
           placeHolder="Enter Your Display Name"
+          errorMessage={errorData?.name}
+
         />
         <Input
           className="tw-mt-2"
-          variant="bordered"
+          variant={Boolean(errorData?.profession) ? "error" : "bordered"}
           type="text"
           value={formData.age}
           onChange={handleAgeChange}
           placeHolder="Enter Your Profession"
+          errorMessage={errorData?.profession}
         />
         <p className="tw-mt-1 tw-text-center">
           This (these) section(s) will have a list of what contents you are
@@ -96,6 +172,7 @@ const InsertPortfolioDataForm = ({ prop }) => {
         {formData.listItems.map((item, index) => {
           return (
             <NavItemInputs
+              titleError={errorData?.listItems[index]}
               item={item}
               key={index}
               index={index}
@@ -103,7 +180,7 @@ const InsertPortfolioDataForm = ({ prop }) => {
               handleTitleChange={handleTitleChange}
               handleDescChange={handleDescChange}
             />
-          )
+          );
         })}
 
         <Button
@@ -115,16 +192,17 @@ const InsertPortfolioDataForm = ({ prop }) => {
         </Button>
 
         <Button
+          btnType='submit'
           className={`tw-w-full tw-mt-2 tw-sticky tw-bottom-0 ${styles.submitButton}`}
           type="bordered"
           onClick={(e) => {
-            handleSubmit(e)
+            handleSubmit(e);
           }}
         >
           Submit
         </Button>
       </form>
     </div>
-  )
+  );
 }
 export default InsertPortfolioDataForm
