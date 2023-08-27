@@ -62,6 +62,7 @@ const TemplateGrid = () => {
             <CaretRightFill />
           </Button>
           <Button
+            theme='light'
             className="tw-w-full"
             type="hoverAnimation"
             onClick={() => templateSelectTrigger(cardIndex)}

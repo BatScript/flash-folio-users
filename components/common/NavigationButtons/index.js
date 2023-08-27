@@ -21,16 +21,20 @@ const NavigationButtons = ({
   // Final Return Statement 👇
   return (
     <div className="tw-flex tw-justify-between">
-      <Button isDisabled={isFirstIndex} onClick={handlePrevious}>
+      <Button type={'icon'} isDisabled={isFirstIndex} onClick={handlePrevious}>
         <ArrowLeftCircle
-          className={isFirstIndex ? 'tw-cursor-not-allowed' : 'tw-cursor-pointer'}
+          className={
+            isFirstIndex ? 'tw-cursor-not-allowed' : 'tw-cursor-pointer'
+          }
           size={40}
           color={isFirstIndex ? disabledWhite : white}
         />
       </Button>
-      <Button isDisabled={isLastIndex} onClick={handleNext}>
+      <Button type={'icon'} isDisabled={isLastIndex} onClick={handleNext}>
         <ArrowRightCircle
-          className={isLastIndex ? 'tw-cursor-not-allowed' : 'tw-cursor-pointer'}
+          className={
+            isLastIndex ? 'tw-cursor-not-allowed' : 'tw-cursor-pointer'
+          }
           size={40}
           color={isLastIndex ? disabledWhite : white}
         />
