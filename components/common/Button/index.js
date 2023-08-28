@@ -10,7 +10,7 @@ const Button = ({
   isDisabled,
   className,
   onClick,
-  theme = 'dark'
+  theme = 'dark',
   btnType='button'
 }) => {
   switch (type) {
