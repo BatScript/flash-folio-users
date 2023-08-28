@@ -10,3 +10,23 @@
     outline: none;
   }
 }
+
+
+
+.error {
+  border: 1px solid rgb(244, 67, 54);
+  padding: 7px;
+  background: transparent;
+  color: rgb(244, 67, 54);
+  &::before {
+    color: #b7b7b7 !important;
+  }
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(244, 67, 54, 0.759);
+  }
+}
+.errroHelper {
+  color: rgb(244, 67, 54);
+  font-size: 12px;
+}

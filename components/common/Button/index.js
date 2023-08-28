@@ -10,15 +10,17 @@ const Button = ({
   isDisabled,
   className,
   onClick,
-  theme = 'dark'
+  theme = 'dark',
+  btnType='button'
 }) => {
   switch (type) {
     case 'bordered':
       return (
         <button
-          className={`${className} ${styles.borderedButton} ${styles[theme]}`}
-          onClick={onClick}
-          disabled={isDisabled}
+        type={btnType}
+        className={`${className} ${styles.borderedButton} ${styles[theme]}`}
+        onClick={onClick}
+        disabled={isDisabled}
         >
           {children}
           {text}
@@ -27,6 +29,7 @@ const Button = ({
     case 'hoverAnimation':
       return (
         <button
+          type={btnType}
           className={`${className} ${styles.hoverAnimatedButton} ${styles[theme]}`}
           onClick={onClick}
           disabled={isDisabled}
@@ -49,6 +52,7 @@ const Button = ({
     default:
       return (
         <button
+          type={btnType}
           onClick={onClick}
           disabled={isDisabled}
           className={`${className} ${styles[theme]}`}

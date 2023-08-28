@@ -7,7 +7,8 @@ const NavItemInputs = ({
   item,
   handleRemoveComponent,
   handleTitleChange,
-  handleDescChange
+  handleDescChange,
+  titleError,
 }) => {
   // Initialisations 👇
   // ----------------
@@ -39,13 +40,15 @@ const NavItemInputs = ({
         Remove
       </Button>
       <Input
+        variant={Boolean(titleError) ? "error" : "bordered"}
         className='tw-mt-2'
         type="text"
         value={item.title}
         onChange={(e) => handleTitleUpdate(e)}
         placeHolder="Title"
+        errorMessage={titleError}
       />
-      <RichTextEditor onChange={(val) => handleDescriptionUpdate(val)} />
+      <RichTextEditor index={index} onChange={(val) => handleDescriptionUpdate(val)} />
     </div>
   )
   // ----------------
