@@ -3,13 +3,22 @@
 
 import styles from './button.module.scss'
 
-const Button = ({ text, type, children, isDisabled, className, onClick, btnType='button' }) => {
+const Button = ({
+  text,
+  type,
+  children,
+  isDisabled,
+  className,
+  onClick,
+  theme = 'dark'
+  btnType='button'
+}) => {
   switch (type) {
     case 'bordered':
       return (
         <button
         type={btnType}
-        className={`${className} ${styles.borderedButton}`}
+        className={`${className} ${styles.borderedButton} ${styles[theme]}`}
         onClick={onClick}
         disabled={isDisabled}
         >
@@ -17,11 +26,22 @@ const Button = ({ text, type, children, isDisabled, className, onClick, btnType=
           {text}
         </button>
       )
-      case 'hoverAnimation':
-        return (
-          <button
+    case 'hoverAnimation':
+      return (
+        <button
           type={btnType}
-          className={`${className} ${styles.hoverAnimatedButton}`}
+          className={`${className} ${styles.hoverAnimatedButton} ${styles[theme]}`}
+          onClick={onClick}
+          disabled={isDisabled}
+        >
+          {children}
+          {text}
+        </button>
+      )
+    case 'icon':
+      return (
+        <button
+          className={`${className}`}
           onClick={onClick}
           disabled={isDisabled}
         >
@@ -35,7 +55,7 @@ const Button = ({ text, type, children, isDisabled, className, onClick, btnType=
           type={btnType}
           onClick={onClick}
           disabled={isDisabled}
-          className={`${className}`}
+          className={`${className} ${styles[theme]}`}
         >
           {children}
           {text}
