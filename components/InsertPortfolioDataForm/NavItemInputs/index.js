@@ -48,7 +48,7 @@ const NavItemInputs = ({
         placeHolder="Title"
         errorMessage={titleError}
       />
-      <RichTextEditor index={index} onChange={(val) => handleDescriptionUpdate(val)} />
+      <RichTextEditor value={item?.desc} index={index} onChange={(val) => handleDescriptionUpdate(val)} />
     </div>
   )
   // ----------------

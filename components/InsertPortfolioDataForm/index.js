@@ -2,11 +2,20 @@ import 'react-quill/dist/quill.snow.css'
 import Button from '../common/Button'
 import styles from './insertPortfolioDataForm.module.scss'
 import Input from '../common/Input'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import NavItemInputs from './NavItemInputs'
 import { saveFormData } from '@/utilities/submitForm'
+import { useToast } from '@chakra-ui/react'
+import { useSession } from 'next-auth/react'
+
 
 const InsertPortfolioDataForm = ({ prop }) => {
+  
+  const [isLoading, setIsLoading] = useState(false);
+  const toast= useToast({position:"top-right"})
+  const session = useSession();
+  console.log("🚀 ~ file: index.js:17 ~ InsertPortfolioDataForm ~ data:", session)
+
   const [formData, setFormData] = useState({
     name: '',
     profession: '',
@@ -18,6 +27,7 @@ const InsertPortfolioDataForm = ({ prop }) => {
     profession: false,
     listItems:[false]
   })
+  
 
   const handleResetError = (name, index) => {
     if(index !== undefined){
@@ -36,7 +46,6 @@ const InsertPortfolioDataForm = ({ prop }) => {
   }
 
   const handleNameChange = (e) => {
-    console.log(e.target);
     setFormData((prevData) => ({
       ...prevData,
       name: e.target.value
@@ -100,43 +109,62 @@ const InsertPortfolioDataForm = ({ prop }) => {
   }
 
   const handleSubmit = (e) => {
-    e.preventDefault()
-    let hasError = false;
-    Object.keys(formData).forEach(function(key, index) {
-      if(!formData[key] && key !== "listItems"){
-        setErrorData((prev) => ({
-          ...prev,
-          [key]: `${key} is required!`
-        }))
-        hasError = true;
-      }else if(key === "listItems"){
-        formData?.listItems?.map((item, index) => {
-          if(item?.title === ""){
-            let newListItem = [...errorData.listItems];
-            newListItem[index] = `Title is required`
-            setErrorData((prev) => ({
-              ...prev,
-              listItems: newListItem
-            }))
-            hasError = true;
+    if (session?.data?.user) {
+      // statrt loading for submit button
+      setIsLoading(true);
+      e.preventDefault();
+      let hasError = false;
+      Object.keys(formData).forEach(function (key, index) {
+        if (!formData[key] && key !== "listItems") {
+          setErrorData((prev) => ({
+            ...prev,
+            [key]: `${key} is required!`,
+          }));
+          hasError = true;
+        } else if (key === "listItems") {
+          formData?.listItems?.map((item, index) => {
+            if (item?.title === "") {
+              let newListItem = [...errorData.listItems];
+              newListItem[index] = `Title is required`;
+              setErrorData((prev) => ({
+                ...prev,
+                listItems: newListItem,
+              }));
+              hasError = true;
+            }
+          });
+        }
+      });
+
+      // Handle form submission with formData
+      if (!hasError) {
+        saveFormData({...formData, email: session.data.user?.email}).then((res) => {
+          let status = "";
+          if (res.status === 200) {
+            status = "success";
+            // reseting the data if form get submitted successfully
+            setFormData({
+              name: "",
+              profession: "",
+              listItems: [{ title: "", desc: "" }],
+            });
+            setErrorData({
+              name: false,
+              profession: false,
+              listItems: [false],
+            });
+          } else {
+            status = "error";
           }
-        })
+          toast({
+            status,
+            title: res.data?.message,
+          });
+          setIsLoading(false);
+        });
       }
-
-    })
-
-
-    if(!hasError){
-      console.log("data submitting");
-      saveFormData(formData)
     }
-    // Handle form submission with formData
-  }
-
-  useEffect(() => {
-    console.log("🚀 ~ file: index.js:99 ~ InsertPortfolioDataForm ~ errorData:", errorData)
-    
-  }, [errorData])
+  };
   
 
   return (
@@ -160,7 +188,7 @@ const InsertPortfolioDataForm = ({ prop }) => {
           className="tw-mt-2"
           variant={Boolean(errorData?.profession) ? "error" : "bordered"}
           type="text"
-          value={formData.age}
+          value={formData.profession}
           onChange={handleAgeChange}
           placeHolder="Enter Your Profession"
           errorMessage={errorData?.profession}
@@ -192,6 +220,8 @@ const InsertPortfolioDataForm = ({ prop }) => {
         </Button>
 
         <Button
+          isDisabled={isLoading}
+          loading = {isLoading}
           btnType='submit'
           className={`tw-w-full tw-mt-2 tw-sticky tw-bottom-0 ${styles.submitButton}`}
           type="bordered"
