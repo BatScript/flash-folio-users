@@ -1,117 +1,159 @@
-import 'react-quill/dist/quill.snow.css'
-import Button from '../common/Button'
-import styles from './insertPortfolioDataForm.module.scss'
-import Input from '../common/Input'
-import { useState } from 'react'
-import NavItemInputs from './NavItemInputs'
-import { saveFormData } from '@/utilities/submitForm'
-import { useToast } from '@chakra-ui/react'
-import { useSession } from 'next-auth/react'
-
+import "react-quill/dist/quill.snow.css";
+import Button from "../common/Button";
+import styles from "./insertPortfolioDataForm.module.scss";
+import Input from "../common/Input";
+import { useState, useEffect } from "react";
+import NavItemInputs from "./NavItemInputs";
+import { saveFormData } from "@/utilities/submitForm";
+import { useToast } from "@chakra-ui/react";
+import { useSession } from "next-auth/react";
+import { getPortfolioByEmail } from "@/common/api";
 
 const InsertPortfolioDataForm = ({ prop }) => {
-  
   const [isLoading, setIsLoading] = useState(false);
-  const toast= useToast({position:"top-right"})
+  const toast = useToast({ position: "top-right" });
   const session = useSession();
-  console.log("🚀 ~ file: index.js:17 ~ InsertPortfolioDataForm ~ data:", session)
 
   const [formData, setFormData] = useState({
-    name: '',
-    profession: '',
-    listItems: [{ title: '', desc: '' }]
-  })
+    name: "",
+    profession: "",
+    listItems: [{ title: "", desc: "" }],
+  });
 
   const [errorData, setErrorData] = useState({
     name: false,
     profession: false,
-    listItems:[false]
-  })
-  
+    listItems: [false],
+  });
+
+  useEffect(() => {
+    // fetch portfolio data
+    if (session?.data?.user?.email) {
+      setIsLoading(true);
+      getPortfolioByEmail(session?.data?.user?.email).then((res) => {
+        setIsLoading(false);
+        if (res?.status === 200) {
+          const data = res.data;
+          let newListItems = [];
+
+          if (data?.profileContent?.length > 0) {
+            data?.profileContent?.map((item, index) => {
+              let obj = {
+                title: item?.linkLabel,
+                desc: item?.content,
+              };
+              newListItems.push(obj);
+            });
+          } else {
+            newListItems.push({ title: "", desc: "" });
+          }
+
+          setFormData({
+            name: data?.name,
+            profession: data?.jobProfile,
+            listItems: newListItems,
+          });
+        }
+      });
+    }
+
+    return () => {
+      setFormData({
+        name: "",
+        profession: "",
+        listItems: [{ title: "", desc: "" }],
+      });
+    };
+  }, [session]);
 
   const handleResetError = (name, index) => {
-    if(index !== undefined){
+    if (index !== undefined) {
       let newListItems = [...errorData.listItems];
-      newListItems[index] = false
-      setErrorData((prev)=> ({
+      newListItems[index] = false;
+      setErrorData((prev) => ({
         ...prev,
-        [name]: newListItems
-      }))
-    }else{
-      setErrorData((prev)=> ({
+        [name]: newListItems,
+      }));
+    } else {
+      setErrorData((prev) => ({
         ...prev,
-        [name]: false
-      }))
+        [name]: false,
+      }));
     }
-  }
+  };
 
   const handleNameChange = (e) => {
+    console.log("name called");
     setFormData((prevData) => ({
       ...prevData,
-      name: e.target.value
-    }))
-    handleResetError('name')
-  }
+      name: e.target.value,
+    }));
+    handleResetError("name");
+  };
 
   const handleAgeChange = (e) => {
+    console.log("age called");
     setFormData((prevData) => ({
       ...prevData,
-      profession: e.target.value
-    }))
-    handleResetError("profession")
-  }
+      profession: e.target.value,
+    }));
+    handleResetError("profession");
+  };
 
   const handleTitleChange = (index, e) => {
-    const newListItems = [...formData.listItems]
-    newListItems[index].title = e.target.value
+    console.log("title called");
+    const newListItems = [...formData.listItems];
+    newListItems[index].title = e.target.value;
     setFormData((prevData) => ({
       ...prevData,
-      listItems: newListItems
-    }))
-    handleResetError('listItems', index)
-  }
+      listItems: newListItems,
+    }));
+    handleResetError("listItems", index);
+  };
 
   const handleDescChange = (index, val) => {
-    const newListItems = [...formData.listItems]
-    newListItems[index].desc = val
+    console.log("desc called");
+    const newListItems = [...formData.listItems];
+    newListItems[index].desc = val;
     setFormData((prevData) => ({
       ...prevData,
-      listItems: newListItems
-    }))
-  }
+      listItems: newListItems,
+    }));
+  };
 
   const handleAddComponent = () => {
+    console.log("add component called");
     setFormData((prevData) => ({
       ...prevData,
-      listItems: [...prevData.listItems, { title: '', desc: '' }]
-    }))
+      listItems: [...prevData.listItems, { title: "", desc: "" }],
+    }));
     setErrorData((prev) => ({
       ...prev,
-      listItems: [...prev.listItems, false]
-    }))
-  }
+      listItems: [...prev.listItems, false],
+    }));
+  };
 
   const handleRemoveComponent = (index) => {
-    const newListItems = [...formData.listItems]
-    newListItems.splice(index, 1)
+    console.log("remove component called");
+    const newListItems = [...formData.listItems];
+    newListItems.splice(index, 1);
     setFormData((prevData) => ({
       ...prevData,
-      listItems: newListItems
-    }))
+      listItems: newListItems,
+    }));
 
-    const newErrorListItems = [...errorData.listItems]
-    newErrorListItems.splice(index, 1)
+    const newErrorListItems = [...errorData.listItems];
+    newErrorListItems.splice(index, 1);
     setErrorData((prevData) => ({
       ...prevData,
-      listItems: newErrorListItems
-    }))
-
-  }
+      listItems: newErrorListItems,
+    }));
+  };
 
   const handleSubmit = (e) => {
     if (session?.data?.user) {
       // statrt loading for submit button
-      setIsLoading(true);
+
       e.preventDefault();
       let hasError = false;
       Object.keys(formData).forEach(function (key, index) {
@@ -138,34 +180,44 @@ const InsertPortfolioDataForm = ({ prop }) => {
 
       // Handle form submission with formData
       if (!hasError) {
-        saveFormData({...formData, email: session.data.user?.email}).then((res) => {
-          let status = "";
-          if (res.status === 200) {
-            status = "success";
-            // reseting the data if form get submitted successfully
-            setFormData({
-              name: "",
-              profession: "",
-              listItems: [{ title: "", desc: "" }],
-            });
-            setErrorData({
-              name: false,
-              profession: false,
-              listItems: [false],
-            });
-          } else {
-            status = "error";
+        setIsLoading(true);
+        saveFormData({ ...formData, email: session.data.user?.email }).then(
+          (res) => {
+            let status = "";
+            if (res.status === 200) {
+              toast({
+                status: "success",
+                title: res.data?.message,
+              });
+              // reseting the data if form get submitted successfully
+              // const emptyList = [{ title: "", desc: "" }];
+              // setFormData({
+              //   name: "",
+              //   profession: "",
+              //   listItems: emptyList,
+              // });
+              setErrorData({
+                name: false,
+                profession: false,
+                listItems: [false],
+              });
+            } else {
+              toast({
+                status: "error",
+                title: res?.response?.data?.error,
+              });
+            }
+
+            setIsLoading(false);
           }
-          toast({
-            status,
-            title: res.data?.message,
-          });
-          setIsLoading(false);
-        });
+        );
       }
     }
   };
-  
+
+  useEffect(() => {
+    console.log("formdata", formData);
+  }, [formData]);
 
   return (
     <div className={`tw-px-2 ${styles.formContainer}`}>
@@ -182,7 +234,6 @@ const InsertPortfolioDataForm = ({ prop }) => {
           onChange={handleNameChange}
           placeHolder="Enter Your Display Name"
           errorMessage={errorData?.name}
-
         />
         <Input
           className="tw-mt-2"
@@ -221,8 +272,8 @@ const InsertPortfolioDataForm = ({ prop }) => {
 
         <Button
           isDisabled={isLoading}
-          loading = {isLoading}
-          btnType='submit'
+          loading={isLoading}
+          btnType="submit"
           className={`tw-w-full tw-mt-2 tw-sticky tw-bottom-0 ${styles.submitButton}`}
           type="bordered"
           onClick={(e) => {
@@ -234,5 +285,5 @@ const InsertPortfolioDataForm = ({ prop }) => {
       </form>
     </div>
   );
-}
-export default InsertPortfolioDataForm
+};
+export default InsertPortfolioDataForm;

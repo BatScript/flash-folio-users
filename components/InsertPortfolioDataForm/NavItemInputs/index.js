@@ -10,6 +10,7 @@ const NavItemInputs = ({
   handleDescChange,
   titleError,
 }) => {
+  
   // Initialisations 👇
   // ----------------
   // Functions 👇
@@ -43,7 +44,7 @@ const NavItemInputs = ({
         variant={Boolean(titleError) ? "error" : "bordered"}
         className='tw-mt-2'
         type="text"
-        value={item.title}
+        value={item?.title}
         onChange={(e) => handleTitleUpdate(e)}
         placeHolder="Title"
         errorMessage={titleError}
