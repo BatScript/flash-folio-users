@@ -1,3 +1,5 @@
+import { useToast } from "@chakra-ui/react"
+
 export const textToHtmlId = (str) => {
   // Input : About Me
   // Output : #about-me
@@ -8,3 +10,4 @@ export const textToHtmlId = (str) => {
   })
   return finalStr
 }
+

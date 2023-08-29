@@ -1,6 +1,7 @@
 // * More variants could be added based on type, just add your case.
 // * Could be custom styled by using sass nesting and targeting 'button' element.
 
+import { CircularProgress } from '@chakra-ui/react'
 import styles from './button.module.scss'
 
 const Button = ({
@@ -11,7 +12,8 @@ const Button = ({
   className,
   onClick,
   theme = 'dark',
-  btnType='button'
+  btnType='button',
+  loading=false
 }) => {
   switch (type) {
     case 'bordered':
@@ -22,8 +24,14 @@ const Button = ({
         onClick={onClick}
         disabled={isDisabled}
         >
-          {children}
-          {text}
+          {
+            loading ? <CircularProgress size={'26px'} isIndeterminate />
+            :
+            <>
+              {children}
+              {text}
+            </>
+          }
         </button>
       )
     case 'hoverAnimation':
@@ -34,8 +42,14 @@ const Button = ({
           onClick={onClick}
           disabled={isDisabled}
         >
-          {children}
-          {text}
+          {
+            loading ? <CircularProgress size={'26px'} isIndeterminate />
+            :
+            <>
+              {children}
+              {text}
+            </>
+          }
         </button>
       )
     case 'icon':
@@ -45,8 +59,14 @@ const Button = ({
           onClick={onClick}
           disabled={isDisabled}
         >
-          {children}
-          {text}
+          {
+            loading ? <CircularProgress size={'26px'} isIndeterminate />
+            :
+            <>
+              {children}
+              {text}
+            </>
+          }
         </button>
       )
     default:
@@ -57,8 +77,14 @@ const Button = ({
           disabled={isDisabled}
           className={`${className} ${styles[theme]}`}
         >
-          {children}
-          {text}
+         {
+            loading ? <CircularProgress size={'26px'} isIndeterminate />
+            :
+            <>
+              {children}
+              {text}
+            </>
+          }
         </button>
       )
   }
