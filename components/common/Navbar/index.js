@@ -18,11 +18,12 @@ const poppins = Poppins({
 
 const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false)
-  const [showLogin, setShowLogin] = useState(false)
   const btnRef = useRef()
   return (
     <div className="tw-flex tw-justify-between tw-p-4">
-      <p className={`${poppins.className} tw-text-2xl tw-tracking-wide tw-flex tw-justify-center tw-items-center`}>
+      <p
+        className={`${poppins.className} tw-text-2xl tw-tracking-wide tw-flex tw-justify-center tw-items-center`}
+      >
         <a href="/">
           <strong>FlashWeb</strong>
         </a>

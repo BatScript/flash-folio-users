@@ -1,13 +1,15 @@
 import styles from './templateGrid.module.scss'
 import Card from '../common/Card'
 import Image from 'next/image'
-import { templateList } from '@/constants'
 import { CaretRightFill, PlusCircleFill } from 'react-bootstrap-icons'
 import Button from '../common/Button'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
-import NavigationButtons from '../common/NavigationButtons'
 import dynamic from 'next/dynamic'
+import { STEPS } from '@/constants/stepperConfig'
+import CommonStepper from '../common/Stepper'
+import { useSession } from 'next-auth/react'
+import { useStepperWithRedux } from '@/hooks/useStepperWithRedux'
 
 // dynamic imports
 const InsertPortfolioDataForm = dynamic(
@@ -17,36 +19,22 @@ const InsertPortfolioDataForm = dynamic(
   }
 )
 
-const TemplateGrid = () => {
-  // Initialisations 👇
+const TemplateGrid = ({ templates: templateList }) => {
   const router = useRouter()
-  const [step, setStep] = useState(1)
-  const [selectedTemplate, setSelectedComponent] = useState(null)
-  // ----------------
-  // Functions 👇
+  const { activeStep, nextStep, prevStep, goToStep, reset } =
+    useStepperWithRedux()
+  const { data: session, status } = useSession()
+
   const templateSelectTrigger = (cardIndex) => {
-    setSelectedComponent(cardIndex)
-    setStep(2)
+    console.log(cardIndex)
+    goToStep(1)
   }
 
-  const handlePreviousStep = () => {
-    if (step > 0) {
-      setStep(step - 1)
-    }
-  }
-
-  const handleNextStep = () => {
-    if (step < 3 && selectedTemplate) {
-      setStep(step + 1)
-    }
-  }
-  // ----------------
-  // Sub Components 👇
   const CardGrid = ({ cardContent, cardIndex }) => {
     return (
       <Card hasPadding={true} hasBorder={true} maxWidth={300}>
         <div>
-          <Image src={cardContent?.image} width={300} height={120} />
+          <Image src={cardContent?.content?.img} width={300} height={120} />
         </div>
         <p className="tw-mt-1">
           <strong>{cardContent?.name}</strong>
@@ -62,10 +50,11 @@ const TemplateGrid = () => {
             <CaretRightFill />
           </Button>
           <Button
-            theme='light'
+            theme="light"
             className="tw-w-full"
             type="hoverAnimation"
             onClick={() => templateSelectTrigger(cardIndex)}
+            isDisabled={status !== 'authenticated'}
           >
             <span>Use</span>&nbsp;
             <PlusCircleFill />
@@ -75,16 +64,16 @@ const TemplateGrid = () => {
     )
   }
   const CurrentStep = () => {
-    switch (step) {
-      case 1:
+    switch (activeStep) {
+      case 0:
         return (
           <div className={styles.grid}>
-            {templateList.map((val, index) => {
+            {templateList?.map((val, index) => {
               return <CardGrid cardContent={val} cardIndex={index} />
             })}
           </div>
         )
-      case 2:
+      case 1:
         return (
           <div>
             <InsertPortfolioDataForm />
@@ -92,26 +81,15 @@ const TemplateGrid = () => {
         )
     }
   }
-  // ----------------
-  // Final Return Statement 👇
+
   return (
     <div className="tw-container tw-mx-auto">
-      <NavigationButtons
-        showPrevious={true}
-        showNext={true}
-        currentContentIndex={step}
-        finalIndex={2}
-        handleNext={() => handleNextStep()}
-        handlePrevious={() => handlePreviousStep()}
-      />
-      {/* <progress className={styles.progressBar} value="32" max="100">
-        32%
-      </progress> */}
-
-      <CurrentStep />
+      <CommonStepper config={STEPS} />
+      <div className="tw-mt-10">
+        <CurrentStep />
+      </div>
     </div>
   )
-  // ----------------
 }
 
 export default TemplateGrid

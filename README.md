@@ -1,18 +1,18 @@
-Flash-folio : One Stop destination for custom new generation web portfolios with custom domain.
+## Todos - (with priority):
+1. CRUD APIs for all Schemas
+    1. Template - 1
+    2. Portfolio - 1
+    3. User - 1
+2. Creator panel - 2.
+3. Maybe update the configure (form) screen - 3.
+4. Subdomain and Publish Screen - 0.
+5. Sync the step component - 0
 
+## Folio by Flashweb
+A FREE web-portfolio builder. Choose a template, customize it and publish.
+
+Built with Nextjs.
 
 ## Authors
-
-- [@Mohit](https://www.github.com/batscript)
-- [@Nosang](https://www.github.com/nosangdev)
-
-
-## Deployment
-
-To deploy this project run
-
-```bash
-  1. npm install
-  2. npm run build
-  3. npm start
-```
+1. Mohit Ranjan
+2. Nosang Subba

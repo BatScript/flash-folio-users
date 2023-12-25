@@ -1,9 +1,18 @@
 import Layout from '@/components/common/Layout'
 import FlashFolioMeta from '@/components/Seo/Meta'
 import TemplateGrid from '@/components/TemplateGrid'
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchTemplates } from '@/thunk/templateThunk'
 
 const CreatePortfolio = () => {
+  const dispatch = useDispatch()
+  const templates = useSelector((state) => state.templates.data)
+
+  useEffect(() => {
+    dispatch(fetchTemplates())
+  }, [dispatch])
+
   return (
     <>
       <Layout>
@@ -14,7 +23,7 @@ const CreatePortfolio = () => {
           canonical={'https"//portfolio.flashweb.in/create'}
           description={`Build your trendy and personalised portfolio website in few steps, without coding!`}
         />
-        <TemplateGrid />
+        <TemplateGrid templates={templates} />
       </Layout>
     </>
   )
