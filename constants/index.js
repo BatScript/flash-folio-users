@@ -1,5 +1,5 @@
 export const homePageContent = {
-  heroText: `<strong>Instant Portfolio Websites:</strong>
+  heroText: `<strong>INSTANT WEB PORTFOLIOS</strong>
     <br /> Effortless, Personalized, and Stunning! Create Your Dream
     Portfolio with Ease.
     <br />

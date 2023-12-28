@@ -1,13 +1,12 @@
 import NextAuth from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
-import connectMongoDB from '@/lib/connect-mongoDB'
 import { User } from '@/schemas'
 
 export const authOptions = {
   // Configure one or more authentication providers
   callbacks: {
-    async signIn({ user, account, profile }) {
-      const { email, password = '', name, image = '' } = user
+    async session({ session, token, user }) {
+      const { email, password = '', name, image = '' } = session?.user
       try {
         // Check if the user exists
         const existingUser = await User.findOne({ email })
@@ -15,7 +14,9 @@ export const authOptions = {
         if (existingUser) {
           // User exists
           console.log({ status: 'exists', user: existingUser })
-          return true
+          // sets user's id for futire usage
+          session.user._id = existingUser?._id
+          return session
         } else {
           const newUser = new User({
             username: name,
@@ -26,7 +27,8 @@ export const authOptions = {
           })
           await newUser.save()
           console.log({ status: 'created', user: newUser })
-          return true
+          session.user._id = newUser?._id
+          return session
         }
       } catch (error) {
         console.log({ status: 'error', error: error })
@@ -39,7 +41,6 @@ export const authOptions = {
       clientId: process.env.NEXT_PUBLIC_GOOGLE_ID,
       clientSecret: process.env.NEXT_PUBLIC_GOOGLE_SECRET
     })
-    // ...add more providers here
   ],
   secret: process.env.NEXT_PUBLIC_NEXTAUTH_SECRET
 }

@@ -34,13 +34,9 @@ const portfolioSchema = new mongoose.Schema(
       ref: 'Template',
       required: true
     },
-    subdomain: { type: String, required: true },
-    custom_domain: { type: String },
-    is_published: { type: Boolean, default: false },
-    domain_configuration: {
-      subdomain: { type: String },
-      custom_domain: { type: String }
-    }
+    subdomain: { type: String, required: false },
+    is_published: { type: Boolean, required: false },
+    template_data: { type: mongoose.Schema.Types.Mixed, required: false }
   },
   { timestamps: true }
 )

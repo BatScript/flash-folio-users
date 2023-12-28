@@ -2,33 +2,39 @@ import 'react-quill/dist/quill.snow.css'
 import Button from '../common/Button'
 import styles from './insertPortfolioDataForm.module.scss'
 import Input from '../common/Input'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import NavItemInputs from './NavItemInputs'
 import { saveFormData } from '@/utilities/submitForm'
+import { useSelector } from 'react-redux'
+import { useStepperWithRedux } from '@/hooks/useStepperWithRedux'
 
-const InsertPortfolioDataForm = ({ prop }) => {
-  const [formData, setFormData] = useState({
-    name: '',
-    profession: '',
-    listItems: [{ title: '', desc: '' }]
-  })
+const InsertPortfolioDataForm = ({ formState }) => {
+  const userInfo = useSelector((state) => state.user.data)
+  const { goToStep } = useStepperWithRedux()
+  const templateInfo = useSelector((state) => state.templates.selectedTemplate)
+  const { _id: user_id } = userInfo
+  const { _id: template_id } = templateInfo
+  const [formData, setFormData] = useState(formState)
 
+  console.log(formState)
+
+  // ! This component looks retarded, please fix it once function shit of this project is over!
   const [errorData, setErrorData] = useState({
     name: false,
     profession: false,
-    listItems:[false]
+    listItems: [false]
   })
 
   const handleResetError = (name, index) => {
-    if(index !== undefined){
-      let newListItems = [...errorData.listItems];
+    if (index !== undefined) {
+      let newListItems = [...errorData.listItems]
       newListItems[index] = false
-      setErrorData((prev)=> ({
+      setErrorData((prev) => ({
         ...prev,
         [name]: newListItems
       }))
-    }else{
-      setErrorData((prev)=> ({
+    } else {
+      setErrorData((prev) => ({
         ...prev,
         [name]: false
       }))
@@ -36,7 +42,6 @@ const InsertPortfolioDataForm = ({ prop }) => {
   }
 
   const handleNameChange = (e) => {
-    console.log(e.target);
     setFormData((prevData) => ({
       ...prevData,
       name: e.target.value
@@ -49,7 +54,7 @@ const InsertPortfolioDataForm = ({ prop }) => {
       ...prevData,
       profession: e.target.value
     }))
-    handleResetError("profession")
+    handleResetError('profession')
   }
 
   const handleTitleChange = (index, e) => {
@@ -96,49 +101,54 @@ const InsertPortfolioDataForm = ({ prop }) => {
       ...prevData,
       listItems: newErrorListItems
     }))
-
   }
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    let hasError = false;
-    Object.keys(formData).forEach(function(key, index) {
-      if(!formData[key] && key !== "listItems"){
+    let hasError = false
+    Object.keys(formData).forEach(function (key, index) {
+      if (!formData[key] && key !== 'listItems') {
         setErrorData((prev) => ({
           ...prev,
           [key]: `${key} is required!`
         }))
-        hasError = true;
-      }else if(key === "listItems"){
+        hasError = true
+      } else if (key === 'listItems') {
         formData?.listItems?.map((item, index) => {
-          if(item?.title === ""){
-            let newListItem = [...errorData.listItems];
+          if (item?.title === '') {
+            let newListItem = [...errorData.listItems]
             newListItem[index] = `Title is required`
             setErrorData((prev) => ({
               ...prev,
               listItems: newListItem
             }))
-            hasError = true;
+            hasError = true
           }
         })
       }
-
     })
 
-
-    if(!hasError){
-      console.log("data submitting");
+    if (!hasError) {
       saveFormData(formData)
 
-      // * 
+      // * GO ahead and save the data
+
+      fetch('/api/portfolio', {
+        method: 'POST',
+        body: JSON.stringify({
+          template_data: { ...formData },
+          user_id,
+          template_id
+        })
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          if (res.status === 'created' || res.status === 'updated') {
+            goToStep(2)
+          }
+        })
     }
   }
-
-  useEffect(() => {
-    console.log("🚀 ~ file: index.js:99 ~ InsertPortfolioDataForm ~ errorData:", errorData)
-    
-  }, [errorData])
-  
 
   return (
     <div className={`tw-px-2 ${styles.formContainer}`}>
@@ -149,19 +159,18 @@ const InsertPortfolioDataForm = ({ prop }) => {
         <Input
           required
           className="tw-mt-2"
-          variant={Boolean(errorData?.name) ? "error" : "bordered"}
+          variant={Boolean(errorData?.name) ? 'error' : 'bordered'}
           type="text"
-          value={formData.name}
+          value={formData?.name}
           onChange={handleNameChange}
           placeHolder="Enter Your Display Name"
           errorMessage={errorData?.name}
-
         />
         <Input
           className="tw-mt-2"
-          variant={Boolean(errorData?.profession) ? "error" : "bordered"}
+          variant={Boolean(errorData?.profession) ? 'error' : 'bordered'}
           type="text"
-          value={formData.age}
+          value={formData?.profession}
           onChange={handleAgeChange}
           placeHolder="Enter Your Profession"
           errorMessage={errorData?.profession}
@@ -170,7 +179,7 @@ const InsertPortfolioDataForm = ({ prop }) => {
           This (these) section(s) will have a list of what contents you are
           going to display as list titles and descriptions
         </p>
-        {formData.listItems.map((item, index) => {
+        {formData?.listItems.map((item, index) => {
           return (
             <NavItemInputs
               titleError={errorData?.listItems[index]}
@@ -181,7 +190,7 @@ const InsertPortfolioDataForm = ({ prop }) => {
               handleTitleChange={handleTitleChange}
               handleDescChange={handleDescChange}
             />
-          );
+          )
         })}
 
         <Button
@@ -193,17 +202,17 @@ const InsertPortfolioDataForm = ({ prop }) => {
         </Button>
 
         <Button
-          btnType='submit'
+          btnType="submit"
           className={`tw-w-full tw-mt-2 tw-sticky tw-bottom-0 ${styles.submitButton}`}
           type="bordered"
           onClick={(e) => {
-            handleSubmit(e);
+            handleSubmit(e)
           }}
         >
           Submit
         </Button>
       </form>
     </div>
-  );
+  )
 }
 export default InsertPortfolioDataForm

@@ -22,8 +22,22 @@ export default async function handler(req, res) {
   } else {
     await connectMongoDB()
     try {
-      const allTemplates = await Template.find({})
-      res.status(200).json({ status: 'found', data: allTemplates })
+      const { _id } = req.query
+      if (_id) {
+        const oneTemplate = await Template.findOne({ _id })
+        if (oneTemplate) {
+          res.status(200).json({ status: 'found', data: oneTemplate })
+        } else {
+          res.status(404).json({ status: 'not-found' })
+        }
+      } else {
+        const allTemplates = await Template.find({})
+        if (allTemplates) {
+          res.status(200).json({ status: 'found', data: allTemplates })
+        } else {
+          res.status(404).json({ status: 'not-found' })
+        }
+      }
     } catch (error) {
       console.error('Error:', error)
       res.status(500).json({ status: 'error', error })

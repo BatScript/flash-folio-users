@@ -8,3 +8,13 @@ export const textToHtmlId = (str) => {
   })
   return finalStr
 }
+
+export const debounce = (func, timeout) => {
+  let timer
+  return function (...args) {
+    clearTimeout(timer)
+    timer = setTimeout(() => {
+      func.apply(this, args)
+    }, timeout)
+  }
+}

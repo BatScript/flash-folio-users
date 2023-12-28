@@ -1,6 +1,7 @@
 import styles from './navbar.module.scss'
 import { List } from 'react-bootstrap-icons'
 import { Poppins } from 'next/font/google'
+import Link from 'next/link'
 import {
   Drawer,
   DrawerCloseButton,
@@ -31,10 +32,10 @@ const Navbar = () => {
       <div className={styles.navbarDesktop}>
         <ul className="tw-flex tw-gap-x-5">
           <li className="tw-cursor-pointer tw-hover-link">
-            <a href="/templates">Templates</a>
+            <Link href="/templates">Templates</Link>
           </li>
           <li className="tw-cursor-pointer tw-hover-link">
-            <a href="https://www.flashweb.in">Blogs</a>
+            <Link href="/">Blogs</Link>
           </li>
           <li className="tw-cursor-pointer">
             <AuthSection />

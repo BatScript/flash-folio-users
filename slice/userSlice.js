@@ -2,7 +2,6 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
   data: {},
-  portfolio: {}
 }
 
 export const userSlice = createSlice({
