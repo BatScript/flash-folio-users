@@ -12,8 +12,12 @@
 8. Cypress integration - 3
 
 ## Currently on
-create page render and data collection on load.
+Fixing Flow
 
+## Issues
+1. Fucked up flow (logged out users) - check it once more
+2. Choosing subdomain inout debounce and correct value.
+3. Form data not saving in DB properly.
 ## Flow
 1. Homepage : Statically rendered, button sends to create if *logged in*
 or else forces user to log in by sending to login screen. [x]

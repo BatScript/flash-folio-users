@@ -1,12 +1,22 @@
 import Button from '@/components/common/Button'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
-import { CaretRightFill, PlusCircleFill } from 'react-bootstrap-icons'
+import {
+  CaretRightFill,
+  CheckCircleFill,
+  PlusCircleFill
+} from 'react-bootstrap-icons'
 import Image from 'next/image'
 import Card from '@/components/common/Card'
-
+import { useSelector } from 'react-redux'
 const CardGrid = ({ cardContent, templateSelectTrigger }) => {
   const { data: session, status } = useSession()
+
+  const selectedTemplate = useSelector(
+    (state) => state?.templates?.selectedTemplate
+  )
+
+  const selected = selectedTemplate === cardContent?._id
 
   const router = useRouter()
 
@@ -35,13 +45,22 @@ const CardGrid = ({ cardContent, templateSelectTrigger }) => {
         </Button>
         <Button
           theme="light"
-          className="tw-w-full"
-          type="hoverAnimation"
+          className={`tw-w-full ${
+            selected || status !== 'authenticated'
+              ? 'tw-cursor-not-allowed'
+              : 'tw-cursor-pointer'
+          }`}
+          type={
+            selected || status !== 'authenticated'
+              ? 'bordered'
+              : 'hoverAnimation'
+          }
           onClick={() => templateSelectTrigger(cardContent._id)}
-          isDisabled={status !== 'authenticated'}
+          isDisabled={status !== 'authenticated' || selected}
         >
-          <span>Use</span>&nbsp;
-          <PlusCircleFill />
+          <span>{selected ? 'Selected' : 'Use'}</span>
+          &nbsp;
+          {selected ? <CheckCircleFill /> : <PlusCircleFill />}
         </Button>
       </div>
     </Card>

@@ -22,39 +22,42 @@ const CommonStepper = ({ config }) => {
   const { selectedTemplate, formData } = templates
 
   const handleStepClick = (step) => {
+    console.log(step)
     // * find a better way
-    switch (step) {
-      case 1:
-        if (selectedTemplate) {
-          goToStep(step)
-        } else {
-          toast({
-            title: 'ERROR',
-            description: 'Select the template first',
-            status: 'failure'
-          })
-        }
-      case 2:
-        if (formData) {
-          goToStep(step)
-        } else {
-          toast({
-            title: 'ERROR',
-            description: 'Fill the form first',
-            status: 'failure'
-          })
-        }
-      default:
+    if (step === 1) {
+      if (selectedTemplate) {
         goToStep(step)
+      } else {
+        toast({
+          title: 'ERROR',
+          description: 'Select the template first',
+          status: 'error'
+        })
+        return
+      }
+    } else if (step === 2) {
+      if (formData && selectedTemplate) {
+        goToStep(step)
+      } else {
+        toast({
+          title: 'ERROR',
+          description: 'Fill the form first',
+          status: 'error'
+        })
+        return
+      }
+    } else {
+      goToStep(step)
     }
   }
 
   return (
     <Stepper
-      size={'lg'}
+      colorScheme="teal"
+      gap={{ base: 0, md: 2, lg: 4 }}
+      size={{ base: 'sm', md: 'md', lg: 'lg' }}
       index={activeStep}
-      maxWidth={'50vw'}
-      className="tw-m-auto"
+      // className="tw-m-auto"
     >
       {config.map((step, index) => (
         <Step

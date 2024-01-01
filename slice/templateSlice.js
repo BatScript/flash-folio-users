@@ -7,9 +7,11 @@ const templateSlice = createSlice({
   initialState: {
     allTemplates: [],
     selectedTemplate: null,
-    formData: null
+    formData: null,
+    subDomain: ''
   },
   reducers: {
+    // ! 
     setAllTemplates: (state, action) => {
       state.allTemplates = action.payload
     },
@@ -18,11 +20,14 @@ const templateSlice = createSlice({
     },
     setFormData: (state, action) => {
       state.formData = action.payload
+    },
+    setSubdomain: (state, action) => {
+      state.subDomain = action.payload
     }
   }
 })
 
-export const { setAllTemplates, selectTemplate, setFormData } =
+export const { setAllTemplates, selectTemplate, setFormData, setSubdomain } =
   templateSlice.actions
 
 export default templateSlice.reducer

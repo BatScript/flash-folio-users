@@ -2,8 +2,10 @@
 .formContainer {
   max-height: 75vh;
   overflow-y: scroll;
+  margin: 0 3 rem;
   @include mobile {
     max-height: 80vh;
+    margin: 0;
   }
   .form {
     color: #f9ffff !important;

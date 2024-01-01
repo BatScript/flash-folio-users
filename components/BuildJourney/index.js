@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { selectTemplate } from '@/slice/templateSlice'
 import ChooseSubdomain from '../ChooseSubdomain'
 import CardGrid from './CardGrid'
+import { setPortfolio } from '@/utilities/api'
 
 // dynamic imports
 const InsertPortfolioDataForm = dynamic(
@@ -16,18 +17,26 @@ const InsertPortfolioDataForm = dynamic(
   }
 )
 
-const BuildJourney = ({ templates: templateList, savedTemplateData }) => {
-  const formState = savedTemplateData
+const BuildJourney = ({ templates: templateList }) => {
   const { activeStep, goToStep } = useStepperWithRedux()
+  const { user, templates } = useSelector((state) => state)
+  const { data } = user
 
   const dispatch = useDispatch()
 
-  const templateSelectTrigger = (_id) => {
+  const templateSelectTrigger = async (_id) => {
     // We set the selected template data in redux now
-    dispatch(
-      selectTemplate(_id)
-    )
-    goToStep(1)
+    //  Todo : Think about thunks
+    dispatch(selectTemplate(_id))
+    await setPortfolio(data?._id, {
+      template_id: _id
+    }).then((res) => {
+      if (res.status === 'created') {
+        goToStep(1)
+      } else {
+        console.log('error')
+      }
+    })
   }
 
   const CurrentStep = () => {
@@ -39,7 +48,7 @@ const BuildJourney = ({ templates: templateList, savedTemplateData }) => {
               return (
                 <CardGrid
                   key={index}
-                  templateSelectTrigger={templateSelectTrigger}
+                  templateSelectTrigger={() => templateSelectTrigger(val._id)}
                   cardContent={val}
                   cardIndex={index}
                 />
@@ -50,7 +59,7 @@ const BuildJourney = ({ templates: templateList, savedTemplateData }) => {
       case 1:
         return (
           <div>
-            <InsertPortfolioDataForm formState={formState} />
+            <InsertPortfolioDataForm />
           </div>
         )
       case 2:
@@ -59,8 +68,10 @@ const BuildJourney = ({ templates: templateList, savedTemplateData }) => {
   }
 
   return (
-    <div className="tw-container tw-mx-auto">
-      <CommonStepper config={STEPS} />
+    <div className="tw-container tw-mx-auto tw-max-w-full">
+      <div className="tw-mx-auto tw-flex tw-justify-center">
+        <CommonStepper config={STEPS} />
+      </div>
       <div className="tw-mt-10">
         <CurrentStep />
       </div>

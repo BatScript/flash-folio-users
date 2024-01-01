@@ -11,12 +11,11 @@ import { useStepperWithRedux } from '@/hooks/useStepperWithRedux'
 const InsertPortfolioDataForm = ({ formState }) => {
   const userInfo = useSelector((state) => state.user.data)
   const { goToStep } = useStepperWithRedux()
-  const templateInfo = useSelector((state) => state.templates.selectedTemplate)
+  const { templates } = useSelector((state) => state)
+  const { selectedTemplate: template_id = '', formData: template_data } =
+    templates
   const { _id: user_id } = userInfo
-  const { _id: template_id } = templateInfo
-  const [formData, setFormData] = useState(formState)
-
-  console.log(formState)
+  const [formData, setFormData] = useState(template_data)
 
   // ! This component looks retarded, please fix it once function shit of this project is over!
   const [errorData, setErrorData] = useState({
@@ -58,7 +57,7 @@ const InsertPortfolioDataForm = ({ formState }) => {
   }
 
   const handleTitleChange = (index, e) => {
-    const newListItems = [...formData.listItems]
+    const newListItems = JSON.parse(JSON.stringify(formData.listItems))
     newListItems[index].title = e.target.value
     setFormData((prevData) => ({
       ...prevData,
@@ -68,7 +67,7 @@ const InsertPortfolioDataForm = ({ formState }) => {
   }
 
   const handleDescChange = (index, val) => {
-    const newListItems = [...formData.listItems]
+    const newListItems = JSON.parse(JSON.stringify(formData.listItems))
     newListItems[index].desc = val
     setFormData((prevData) => ({
       ...prevData,
@@ -133,11 +132,10 @@ const InsertPortfolioDataForm = ({ formState }) => {
 
       // * GO ahead and save the data
 
-      fetch('/api/portfolio', {
-        method: 'POST',
+      fetch(`/api/portfolio?user_id=${user_id}`, {
+        method: 'PATCH',
         body: JSON.stringify({
           template_data: { ...formData },
-          user_id,
           template_id
         })
       })
@@ -179,7 +177,7 @@ const InsertPortfolioDataForm = ({ formState }) => {
           This (these) section(s) will have a list of what contents you are
           going to display as list titles and descriptions
         </p>
-        {formData?.listItems.map((item, index) => {
+        {formData?.listItems?.map((item, index) => {
           return (
             <NavItemInputs
               titleError={errorData?.listItems[index]}
