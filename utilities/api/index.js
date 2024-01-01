@@ -1,12 +1,12 @@
 // Server side APIs
 export const getAllTemplates = fetch(
-  'http://localhost:3000/api/templates'
+  `${process.env.NEXT_PUBLIC_HOST}/api/templates`
 ).then((res) => {
   return res.json()
 })
 
 export const getPortfolio = (userId) => {
-  return fetch(`http://localhost:3000/api/portfolio?user_id=${userId}`)
+  return fetch(`${process.env.NEXT_PUBLIC_HOST}/api/portfolio?user_id=${userId}`)
     .then((res) => res.json())
     .then((res) => {
       if (res?.portfolio) {
