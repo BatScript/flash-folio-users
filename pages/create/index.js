@@ -20,12 +20,11 @@ const CreatePortfolio = ({ templates, saved_template_data }) => {
     listItems: [{ title: '', desc: '' }]
   }
   const {
-    template_id,
+    template_id = '',
     user_id = '',
     template_data = defaultFormData,
-    subdomain
+    subdomain = ''
   } = saved_template_data
-  console.log('saved_template_data : ', saved_template_data)
   const dispatch = useDispatch()
   useEffect(() => {
     // * As soon as we have the data we set it into the redux
@@ -55,7 +54,7 @@ export async function getServerSideProps(context) {
   const { user = {} } = session || {}
 
   const [templates, saved_template_data] = await Promise.all([
-    getAllTemplates,
+    getAllTemplates(),
     getPortfolio(user._id)
   ])
 

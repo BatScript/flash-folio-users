@@ -1,6 +1,7 @@
 import NextAuth from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 import { User } from '@/schemas'
+import connectMongoDB from '@/lib/connect-mongoDB'
 
 export const authOptions = {
   // Configure one or more authentication providers
@@ -9,6 +10,7 @@ export const authOptions = {
       const { email, password = '', name, image = '' } = session?.user
       try {
         // Check if the user exists
+        await connectMongoDB()
         const existingUser = await User.findOne({ email })
 
         if (existingUser) {
