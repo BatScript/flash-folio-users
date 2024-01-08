@@ -12,16 +12,14 @@
 8. Cypress integration - 3
 
 ## Currently on
-Fixing Flow
+Fixing login data loss
 
 ## Issues
-1. Fucked up flow (logged out users) - check it once more
-2. Choosing subdomain inout debounce and correct value.
-3. Form data not saving in DB properly.
+1. Data gets deleted after re-login.
+
 ## Flow
 1. Homepage : Statically rendered, button sends to create if *logged in*
 or else forces user to log in by sending to login screen. [x]
-
 2. Create: Auth protected route, has all three steps. Keeps the following data *on page load*:
     > selected portfolio
     > saved data in form

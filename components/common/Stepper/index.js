@@ -19,7 +19,8 @@ const CommonStepper = ({ config }) => {
   const { templates } = useSelector((state) => state)
   const toast = useToast()
 
-  const { selectedTemplate, formData } = templates
+  const { portfolio } = templates
+  const { selectedTemplate, formData } = portfolio
 
   const handleStepClick = (step) => {
     console.log(step)

@@ -41,8 +41,8 @@ const portfolioSchema = new mongoose.Schema(
   { timestamps: true }
 )
 
-export const User = mongoose.models.User || mongoose.model('User', userSchema)
+export const User = mongoose?.models?.User || mongoose.model('User', userSchema)
 export const Template =
-  mongoose.models.Template || mongoose.model('Template', templateSchema)
+  mongoose?.models?.Template || mongoose.model('Template', templateSchema)
 export const Portfolio =
-  mongoose.models.Portfolio || mongoose.model('Portfolio', portfolioSchema)
+  mongoose?.models?.Portfolio || mongoose.model('Portfolio', portfolioSchema)

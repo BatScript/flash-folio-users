@@ -9,16 +9,49 @@ import {
 import Image from 'next/image'
 import Card from '@/components/common/Card'
 import { useSelector } from 'react-redux'
-const CardGrid = ({ cardContent, templateSelectTrigger }) => {
+import { useStepperWithRedux } from '@/hooks/useStepperWithRedux'
+const CardGrid = ({ cardContent }) => {
   const { data: session, status } = useSession()
 
   const selectedTemplate = useSelector(
-    (state) => state?.templates?.selectedTemplate
+    (state) => state?.templates?.portfolio?.selectedTemplate
   )
+
+  const { goToStep } = useStepperWithRedux()
 
   const selected = selectedTemplate === cardContent?._id
 
   const router = useRouter()
+
+  const { user } = useSelector((state) => state)
+  const { data } = user
+
+  const templateSelectTrigger = async (_id) => {
+    //  todo : Thunkify this shit
+    dispatch(
+      updatePortFolio({
+        user_id: data?._id,
+        payload: {
+          template_id: _id
+        }
+      })
+    ).then((res) => {
+      if (res.status === 'created') {
+        goToStep(1)
+      } else {
+        console.log('error')
+      }
+    })
+    // await setPortfolio(data?._id, {
+    //   template_id: _id
+    // }).then((res) => {
+    //   if (res.status === 'created') {
+    //     goToStep(1)
+    //   } else {
+    //     console.log('error')
+    //   }
+    // })
+  }
 
   return (
     <Card hasPadding={true} hasBorder={true} maxWidth={400}>

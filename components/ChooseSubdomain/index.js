@@ -14,11 +14,14 @@ const ChooseSubdomain = () => {
   const toast = useToast()
   const [variant, setVariant] = useState('bordered')
   const { user, templates } = useSelector((state) => state)
+  console.log(templates)
   const { _id } = user?.data
-  const [subdomainName, setSubdomainName] = useState(templates?.subDomain)
+  const [subdomainName, setSubdomainName] = useState(
+    templates?.portfolio?.subDomain
+  )
   const { nextStep } = useStepperWithRedux()
   const [btnText, setBtnText] = useState(
-    templates?.subDomain ? 'Update' : 'Publish'
+    templates?.portfolio?.subDomain ? 'Update' : 'Publish'
   )
   const [debouncedValue] = useDebounce(subdomainName, 500)
   const router = useRouter()

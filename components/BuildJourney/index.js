@@ -3,11 +3,9 @@ import dynamic from 'next/dynamic'
 import { STEPS } from '@/constants/stepperConfig'
 import CommonStepper from '../common/Stepper'
 import { useStepperWithRedux } from '@/hooks/useStepperWithRedux'
-import { useSelector, useDispatch } from 'react-redux'
-import { selectTemplate } from '@/slice/templateSlice'
+import { useSelector } from 'react-redux'
 import ChooseSubdomain from '../ChooseSubdomain'
 import CardGrid from './CardGrid'
-import { setPortfolio } from '@/utilities/api'
 
 // dynamic imports
 const InsertPortfolioDataForm = dynamic(
@@ -17,27 +15,11 @@ const InsertPortfolioDataForm = dynamic(
   }
 )
 
-const BuildJourney = ({ templates: templateList }) => {
+const BuildJourney = () => {
   const { activeStep, goToStep } = useStepperWithRedux()
-  const { user, templates } = useSelector((state) => state)
-  const { data } = user
-
-  const dispatch = useDispatch()
-
-  const templateSelectTrigger = async (_id) => {
-    // We set the selected template data in redux now
-    //  Todo : Think about thunks
-    dispatch(selectTemplate(_id))
-    await setPortfolio(data?._id, {
-      template_id: _id
-    }).then((res) => {
-      if (res.status === 'created') {
-        goToStep(1)
-      } else {
-        console.log('error')
-      }
-    })
-  }
+  const { templates } = useSelector((state) => state)
+  const { allTemplates } = templates
+  const templateList = allTemplates?.data
 
   const CurrentStep = () => {
     switch (activeStep) {
@@ -46,12 +28,7 @@ const BuildJourney = ({ templates: templateList }) => {
           <div className={styles.grid}>
             {templateList?.map((val, index) => {
               return (
-                <CardGrid
-                  key={index}
-                  templateSelectTrigger={() => templateSelectTrigger(val._id)}
-                  cardContent={val}
-                  cardIndex={index}
-                />
+                <CardGrid key={index} cardContent={val} cardIndex={index} />
               )
             })}
           </div>

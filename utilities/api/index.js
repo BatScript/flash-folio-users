@@ -17,7 +17,6 @@ export const getAllTemplates = async () => {
 }
 
 export const getPortfolio = async (userId) => {
-  console.log(userId)
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_HOST}/api/portfolio?user_id=${userId}`,

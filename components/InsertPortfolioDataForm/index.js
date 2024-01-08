@@ -4,20 +4,22 @@ import styles from './insertPortfolioDataForm.module.scss'
 import Input from '../common/Input'
 import { useState } from 'react'
 import NavItemInputs from './NavItemInputs'
-import { saveFormData } from '@/utilities/submitForm'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { useStepperWithRedux } from '@/hooks/useStepperWithRedux'
+import { updatePortFolio } from '@/thunk/portfolioThunk'
 
-const InsertPortfolioDataForm = ({ formState }) => {
-  const userInfo = useSelector((state) => state.user.data)
+const InsertPortfolioDataForm = () => {
   const { goToStep } = useStepperWithRedux()
-  const { templates } = useSelector((state) => state)
-  const { selectedTemplate: template_id = '', formData: template_data } =
-    templates
-  const { _id: user_id } = userInfo
-  const [formData, setFormData] = useState(template_data)
+  const { templates, user } = useSelector((state) => state)
+  const { data } = user
+  const { _id: user_id } = data
 
-  // ! This component looks retarded, please fix it once function shit of this project is over!
+  const { portfolio } = templates
+  const { selectedTemplate, formData } = portfolio
+  const [localFormData, setLocalFormData] = useState(formData)
+  const dispatch = useDispatch()
+
+  // ! This component looks retarded, please fix it once functional shit of this project is over!
   const [errorData, setErrorData] = useState({
     name: false,
     profession: false,
@@ -41,7 +43,7 @@ const InsertPortfolioDataForm = ({ formState }) => {
   }
 
   const handleNameChange = (e) => {
-    setFormData((prevData) => ({
+    setLocalFormData((prevData) => ({
       ...prevData,
       name: e.target.value
     }))
@@ -49,7 +51,7 @@ const InsertPortfolioDataForm = ({ formState }) => {
   }
 
   const handleAgeChange = (e) => {
-    setFormData((prevData) => ({
+    setLocalFormData((prevData) => ({
       ...prevData,
       profession: e.target.value
     }))
@@ -57,9 +59,9 @@ const InsertPortfolioDataForm = ({ formState }) => {
   }
 
   const handleTitleChange = (index, e) => {
-    const newListItems = JSON.parse(JSON.stringify(formData.listItems))
+    const newListItems = JSON.parse(JSON.stringify(localFormData.listItems))
     newListItems[index].title = e.target.value
-    setFormData((prevData) => ({
+    setLocalFormData((prevData) => ({
       ...prevData,
       listItems: newListItems
     }))
@@ -67,16 +69,16 @@ const InsertPortfolioDataForm = ({ formState }) => {
   }
 
   const handleDescChange = (index, val) => {
-    const newListItems = JSON.parse(JSON.stringify(formData.listItems))
+    const newListItems = JSON.parse(JSON.stringify(localFormData.listItems))
     newListItems[index].desc = val
-    setFormData((prevData) => ({
+    setLocalFormData((prevData) => ({
       ...prevData,
       listItems: newListItems
     }))
   }
 
   const handleAddComponent = () => {
-    setFormData((prevData) => ({
+    setLocalFormData((prevData) => ({
       ...prevData,
       listItems: [...prevData.listItems, { title: '', desc: '' }]
     }))
@@ -87,9 +89,9 @@ const InsertPortfolioDataForm = ({ formState }) => {
   }
 
   const handleRemoveComponent = (index) => {
-    const newListItems = [...formData.listItems]
+    const newListItems = [...localFormData.listItems]
     newListItems.splice(index, 1)
-    setFormData((prevData) => ({
+    setLocalFormData((prevData) => ({
       ...prevData,
       listItems: newListItems
     }))
@@ -105,15 +107,15 @@ const InsertPortfolioDataForm = ({ formState }) => {
   const handleSubmit = (e) => {
     e.preventDefault()
     let hasError = false
-    Object.keys(formData).forEach(function (key, index) {
-      if (!formData[key] && key !== 'listItems') {
+    Object.keys(localFormData).forEach(function (key, index) {
+      if (!localFormData[key] && key !== 'listItems') {
         setErrorData((prev) => ({
           ...prev,
           [key]: `${key} is required!`
         }))
         hasError = true
       } else if (key === 'listItems') {
-        formData?.listItems?.map((item, index) => {
+        localFormData?.listItems?.map((item, index) => {
           if (item?.title === '') {
             let newListItem = [...errorData.listItems]
             newListItem[index] = `Title is required`
@@ -128,23 +130,25 @@ const InsertPortfolioDataForm = ({ formState }) => {
     })
 
     if (!hasError) {
-      saveFormData(formData)
-
-      // * GO ahead and save the data
-
-      fetch(`/api/portfolio?user_id=${user_id}`, {
-        method: 'PATCH',
-        body: JSON.stringify({
-          template_data: { ...formData },
-          template_id
+      dispatch(
+        updatePortFolio({
+          user_id,
+          payload: {
+            template_data: { ...localFormData },
+            template_id: selectedTemplate
+          },
+          method: 'PATCH'
         })
+      ).then((res) => {
+        console.log('kjashdkashd', res)
+        if (
+          res?.payload?.status === 'created' ||
+          res?.payload?.status === 'updated'
+        ) {
+          console.log(res)
+          goToStep(2)
+        }
       })
-        .then((res) => res.json())
-        .then((res) => {
-          if (res.status === 'created' || res.status === 'updated') {
-            goToStep(2)
-          }
-        })
     }
   }
 
@@ -159,7 +163,7 @@ const InsertPortfolioDataForm = ({ formState }) => {
           className="tw-mt-2"
           variant={Boolean(errorData?.name) ? 'error' : 'bordered'}
           type="text"
-          value={formData?.name}
+          value={localFormData?.name}
           onChange={handleNameChange}
           placeHolder="Enter Your Display Name"
           errorMessage={errorData?.name}
@@ -168,7 +172,7 @@ const InsertPortfolioDataForm = ({ formState }) => {
           className="tw-mt-2"
           variant={Boolean(errorData?.profession) ? 'error' : 'bordered'}
           type="text"
-          value={formData?.profession}
+          value={localFormData?.profession}
           onChange={handleAgeChange}
           placeHolder="Enter Your Profession"
           errorMessage={errorData?.profession}
@@ -177,7 +181,7 @@ const InsertPortfolioDataForm = ({ formState }) => {
           This (these) section(s) will have a list of what contents you are
           going to display as list titles and descriptions
         </p>
-        {formData?.listItems?.map((item, index) => {
+        {localFormData?.listItems?.map((item, index) => {
           return (
             <NavItemInputs
               titleError={errorData?.listItems[index]}
